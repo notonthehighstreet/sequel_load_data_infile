@@ -2,7 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Sequel::LoadDataInfile do
   before :each do
-    @sql = TEST_DB[:foo].load_csv_infile_sql("bar.csv", [:bar, :baz])
+    dataset = TEST_DB[:foo]
+    dataset.db.stub(:schema).and_return([])
+    @sql = dataset.load_csv_infile_sql("bar.csv", [:bar, :baz])
   end
 
   it "loads the data in the file" do

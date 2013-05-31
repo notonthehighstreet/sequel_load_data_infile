@@ -1,6 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Sequel::LoadDataInfileExpression do
+  before :each do
+    TEST_DB.stub(:schema).and_return([])
+  end
+
   it "loads the data in the file into the table" do
     described_class.new("bar.csv", :foo, ['bar', 'quux']).
       to_sql(TEST_DB).should include("LOAD DATA INFILE 'bar.csv' INTO TABLE `foo`")
@@ -53,8 +57,15 @@ describe Sequel::LoadDataInfileExpression do
                         :etl_batch_id => 3}).
       to_sql(TEST_DB)
 
-    sql.should include("SET")
+    
     sql.should include("`etl_batch_id` = 3")
     sql.should include("`bar` = unhex(@bar)")
+  end
+
+  it "unhexes binary columns automatically via set" do
+    TEST_DB.stub(:schema).and_return([[:bar, {:type => :blob}]])
+    sql = described_class.new("bar.csv", :foo, ['bar', 'quux']).to_sql(TEST_DB)
+    sql.should include("(@bar,`quux`)")
+    sql.should include("SET `bar` = unhex(@bar)")
   end
 end

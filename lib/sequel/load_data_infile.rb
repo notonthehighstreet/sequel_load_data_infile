@@ -30,6 +30,7 @@ module Sequel
 
     def to_sql(db)
       @db = db
+      
       [load_fragment,
        replace_fragment,
        table_fragment,
@@ -81,15 +82,33 @@ module Sequel
     end
 
     def set_fragment
-      unless @set.empty?
-        "SET " + @set.map do |k, v|
+      unless set_columns.empty?
+        "SET " + set_columns.map do |k, v|
           "#{@db.literal(k)} = #{@db.literal(v)}"
         end.join(", ")
       end
     end
 
     def format_column(column)
-      column.to_s[0..0] == "@" ? column : "`#{column}`"
+      if binary_columns.include?(column)
+        "@#{column}"
+      elsif column.to_s[0..0] == "@"
+        column
+      else
+        "`#{column}`"
+      end
+    end
+
+    def binary_columns
+      @binary_columns ||= @db.schema(@table).
+        select {|a| a[1][:type] == :blob }.map {|a| a.first.to_s }
+    end
+    
+    def set_columns
+      binary_columns.inject({}) do |hash, column|
+        hash[column.to_sym] = :unhex.sql_function("@#{column}".lit)
+        hash
+      end.merge(@set)
     end
   end
 
