@@ -1,0 +1,4 @@
+adapter: mysql
+username: root
+socket: /tmp/mysql.sock
+database: load_data_infile_test_db

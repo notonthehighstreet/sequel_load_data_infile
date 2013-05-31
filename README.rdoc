@@ -1,6 +1,16 @@
 = sequel_load_data_infile
 
-Description goes here.
+Provides LOAD DATA INFILE support for mysql datasets.
+
+To use:
+
+    require 'sequel/load_data_infile'
+
+    DB[:some_table].load_data_infile(filepath, [:column, :names])
+
+    # Or, for CSV data:
+
+    DB[:some_table].load_csv_infile(filepath, [:column, :names])
 
 == Contributing to sequel_load_data_infile
  
