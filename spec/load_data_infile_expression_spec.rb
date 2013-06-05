@@ -64,7 +64,7 @@ describe Sequel::LoadDataInfileExpression do
 
   it "unhexes binary columns automatically via set" do
     TEST_DB.stub(:schema).and_return([[:bar, {:type => :blob}]])
-    sql = described_class.new("bar.csv", :foo, ['bar', 'quux']).to_sql(TEST_DB)
+    sql = described_class.new("bar.csv", :foo, [:bar, :quux]).to_sql(TEST_DB)
     sql.should include("(@bar,`quux`)")
     sql.should include("SET `bar` = unhex(@bar)")
   end

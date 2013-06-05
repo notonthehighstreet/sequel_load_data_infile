@@ -90,7 +90,7 @@ module Sequel
     end
 
     def format_column(column)
-      if binary_columns.include?(column)
+      if binary_columns.include?(column.to_s)
         "@#{column}"
       elsif column.to_s[0..0] == "@"
         column
