@@ -53,7 +53,7 @@ describe Sequel::LoadDataInfileExpression do
 
   it "can set column values" do
     sql = described_class.new("bar.csv", :foo, ['@bar', 'quux'], 
-                        :set => {:bar => :unhex.sql_function("@bar".lit),
+                        :set => {:bar => Sequel.function(:unhex, Sequel.lit("@bar")),
                         :etl_batch_id => 3}).
       to_sql(TEST_DB)
 

@@ -106,7 +106,8 @@ module Sequel
     
     def set_columns
       binary_columns.inject({}) do |hash, column|
-        hash[column.to_sym] = :unhex.sql_function("@#{column}".lit)
+        hash[column.to_sym] = Sequel.function(:unhex, 
+                                              Sequel.lit("@#{column}"))
         hash
       end.merge(@set)
     end
