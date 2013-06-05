@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "sequel_load_data_infile"
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Roland Swingler"]
-  s.date = "2013-05-31"
+  s.date = "2013-06-05"
   s.description = "Provides LOAD DATA INFILE support for mysql datasets"
   s.email = "roland.swingler@gmail.com"
   s.extra_rdoc_files = [
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/sequel/load_data_infile.rb",
+    "sequel_load_data_infile.gemspec",
     "spec/db_connections.yml.dist",
     "spec/load_data_infile_expression_spec.rb",
     "spec/load_data_infile_spec.rb",
@@ -33,7 +34,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/knaveofdiamonds/sequel_load_data_infile"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.25"
+  s.rubygems_version = "1.8.24"
   s.summary = "Provides LOAD DATA INFILE support for mysql datasets"
 
   if s.respond_to? :specification_version then
