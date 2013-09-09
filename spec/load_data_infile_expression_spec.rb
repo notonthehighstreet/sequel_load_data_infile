@@ -63,9 +63,16 @@ describe Sequel::LoadDataInfileExpression do
   end
 
   it "unhexes binary columns automatically via set" do
-    TEST_DB.stub(:schema).and_return([[:bar, {:type => :blob}]])
+    TEST_DB.stub(:schema).and_return([[:bar, {:type => :blob, :db_type => "binary(16)"}]])
     sql = described_class.new("bar.csv", :foo, [:bar, :quux]).to_sql(TEST_DB)
     sql.should include("(@bar,`quux`)")
     sql.should include("SET `bar` = unhex(@bar)")
+  end
+
+  it "doesn't trust Sequel's type conversion" do
+    TEST_DB.stub(:schema).and_return([[:bar, {:type => :blob, :db_type => "enum('foo')"}]])
+    sql = described_class.new("bar.csv", :foo, [:bar, :quux]).to_sql(TEST_DB)
+    sql.should_not include("(@bar,`quux`)")
+    sql.should_not include("SET `bar` = unhex(@bar)")
   end
 end

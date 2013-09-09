@@ -101,7 +101,7 @@ module Sequel
 
     def binary_columns
       @binary_columns ||= @db.schema(@table).
-        select {|a| a[1][:type] == :blob }.map {|a| a.first.to_s }
+        select {|a| a[1][:db_type] =~ /^binary/ }.map {|a| a.first.to_s }
     end
     
     def set_columns
