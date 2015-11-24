@@ -10,7 +10,7 @@ describe Sequel::LoadDataInfileExpression do
       to_sql(TEST_DB).should include("LOAD DATA INFILE 'bar.csv' INTO TABLE `foo`")
   end
 
-  it "loads the data with replacment" do
+  it "loads the data with replacement" do
     described_class.new("bar.csv", :foo, ['bar', 'quux'],
                         :update => :replace).
       to_sql(TEST_DB).should include("REPLACE INTO TABLE")
@@ -60,6 +60,11 @@ describe Sequel::LoadDataInfileExpression do
     
     sql.should include("`etl_batch_id` = 3")
     sql.should include("`bar` = unhex(@bar)")
+  end
+
+  it "can load a file from the client" do
+    described_class.new("bar.csv", :foo, ['bar', 'quux'], :local => true).
+      to_sql(TEST_DB).should include("LOAD DATA LOCAL INFILE")
   end
 
   it "unhexes binary columns automatically via set" do

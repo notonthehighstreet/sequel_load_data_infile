@@ -3,7 +3,7 @@ require 'sequel'
 module Sequel
   # @api private
   class LoadDataInfileExpression
-    attr_reader :path, :table, :columns, :ignore, :character_set
+    attr_reader :path, :table, :columns, :ignore, :character_set, :local
     
     def initialize(path, table, columns, opts={})
       @path    = path
@@ -11,6 +11,7 @@ module Sequel
       @columns = columns
       @ignore  = opts[:ignore]
       @update  = opts[:update]
+      @local   = opts[:local]
       @set     = opts[:set] || {}
       @character_set = opts[:character_set] || "utf8"
       if opts[:format] == :csv
@@ -46,7 +47,7 @@ module Sequel
     private
 
     def load_fragment
-      "LOAD DATA INFILE '#{path}'"
+      "LOAD DATA #{local_fragment}INFILE '#{path}'"
     end
 
     def replace_fragment
@@ -75,6 +76,10 @@ module Sequel
 
     def ignore_fragment
       "IGNORE #{ignore} LINES" if ignore
+    end
+
+    def local_fragment
+      "LOCAL " if local
     end
 
     def column_fragment
